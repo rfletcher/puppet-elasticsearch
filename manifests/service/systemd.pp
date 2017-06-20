@@ -172,8 +172,11 @@ define elasticsearch::service::systemd(
 
     }
 
-  $service_require = Exec["systemd_reload_${name}"]
+    $service_require = Exec["systemd_reload_${name}"]
 
+    if $elasticsearch::params::pid_dir {
+      File[$elasticsearch::params::pid_dir] -> Service["elasticsearch-instance-${name}"]
+    }
   } else {
 
     file { "${elasticsearch::params::systemd_service_path}/elasticsearch.service":
